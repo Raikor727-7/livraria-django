@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Confirmação de Exclusão</title>
+</head>
+<body>
+    <h1>Confirmar Exclusão de Editora</h1>
+    
+    <!-- 📋 EXIBIR DADOS DO Editora PARA CONFIRMAÇÃO -->
+    <p><strong>Nome:</strong> {{ editora.nome_editora }}</p>
+    <p><strong>Endereco:</strong> {{ editora.endereco }}</p>
+    <p><strong>Telefone:</strong> {{ editora.telefone }}</p>
+    <p><strong>Email:</strong> {{ editora.email }}</p>
+    
+    <!-- ❓ MENSAGEM DE CONFIRMAÇÃO -->
+    <p>Tem certeza que deseja excluir esta editora?</p>
+    
+    <!-- ✅ FORMULÁRIO PARA CONFIRMAR EXCLUSÃO -->
+    <form action="" method="post">
+        {% csrf_token %}
+        <button type="submit" style="background-color: red; color: white;">CONFIRMAR EXCLUSÃO</button>
+    </form>
+    
+    <!-- ↩️ BOTÃO PARA CANCELAR (voltar para lista) -->
+    <a href="{% url 'listar_editoras' %}">Cancelar</a>
+</body>
+</html>

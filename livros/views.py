@@ -282,10 +282,6 @@ def editar_editoras(request, id_editora):
             messages.error(request, 'Nome da editora não pode estar vazio!')
             return render(request, 'livros/formulario_editora.html')
 
-        # ✅ VALIDAÇÃO: Verificar se nome já existe
-        if Editoras.objects.filter(nome_editora=nome).exists():
-            messages.error(request, 'Já existe uma editora com este nome!')
-            return render(request, 'livros/formulario_editora.html')
 
         editora.nome_editora = nome
         editora.endereco = endereco
@@ -297,7 +293,14 @@ def editar_editoras(request, id_editora):
         return redirect('listar_editoras')
 
 def excluir_editora(request, id_editora):
-    return 0
+    editora = get_object_or_404(Editoras, id_editora=id_editora)
+
+    if request.method == 'POST':
+        editora.delete()
+        messages.success(request, 'Editora excluida com exito')
+        return redirect('listar_editoras')
+    else:
+        return render(request, 'livros/excluir_editora.html', {'editora': editora})
 
 
 
