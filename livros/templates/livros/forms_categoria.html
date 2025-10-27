@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>adicionar categoria</title>
+</head>
+<body>
+   <h1>formulario de adicao de categoria</h1>
+   <form action="" method="post">
+        {% csrf_token %}
+        <input type="text" name="nome_categoria" placeholder="nome">
+        <input type="text" name="descricao" placeholder="descricao">
+        <button type="submit">Adicionar</button>
+   </form> 
+</body>
+</html>

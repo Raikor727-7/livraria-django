@@ -311,7 +311,30 @@ def listar_categorias(request):
 
 
 def adicionar_categoria(request):
-    return 0
+    if request.method == 'POST':
+        nome = request.POST.get('nome_categoria')
+        descricao = request.POST.get('descricao')
+
+        if not nome:
+            messages.error(request, 'nome invalido')
+            render(request, 'livros/forms_categoria.html')
+
+        if Categorias.objects.filter(nome_categoria=nome).exists():
+            messages.error(request, 'Já existe uma categoria com este nome!')
+            return render(request, 'livros/forms_categoria.html')
+        try:
+            categoria = Categorias.objects.create(
+                nome_categoria = nome,
+                descricao = descricao or None
+            )
+            messages.success(request, 'categoria adicionada com sucesso')
+            return redirect('listar_categorias')
+        except ValueError as e:
+            messages.error(request, f'Erro ao criar categoria: {str(e)}')
+            return render(request, 'livros/forms_categoria.html')
+
+    else:
+        return render(request, 'livros/forms_categoria.html')
 
 def excluir_categorias(request, id_categoria):
     return 0
