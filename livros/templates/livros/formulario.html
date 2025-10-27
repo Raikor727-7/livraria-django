@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Formulario adicionar</title>
+</head>
+<body>
+    <h1>Forms de adicao de livro</h1>
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <p style="color: green;">{{ message }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+    <form action="" method="post">
+        {% csrf_token %}
+        <input type="text" name="titulo" placeholder="Título" required>
+        <input type="number" name="ano_publicacao" placeholder="Ano Publicação">
+        <input type="text" name="preco" placeholder="Preço">
+        <input type="number" name="estoque" placeholder="Estoque">
+        
+        <!-- ✅ SELECT PARA EDITORA -->
+        <select name="id_editora">
+            <option value="">Selecione uma editora</option>
+            {% for editora in editoras %}
+            <option value="{{ editora.id_editora }}">{{ editora.nome_editora }}</option>
+            {% endfor %}
+        </select>
+        
+        <!-- ✅ SELECT PARA CATEGORIA -->
+        <select name="id_categoria">
+            <option value="">Selecione uma categoria</option>
+            {% for categoria in categorias %}
+            <option value="{{ categoria.id_categoria }}">{{ categoria.nome_categoria }}</option>
+            {% endfor %}
+        </select>
+        
+        <button type="submit">Salvar</button>
+    </form>
+</body>
+</html>

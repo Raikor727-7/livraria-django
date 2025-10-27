@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lista de Livros</title>
+</head>
+<body>
+    <h1>Livros da Livraria</h1>
+
+    <!-- ✅ ADICIONE ESTE BLOCO PARA MOSTRAR MENSAGENS -->
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <p style="color: green;">{{ message }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <form method="get" action="{% url 'buscar_livros' %}">
+        <input type="text" name="q" placeholder="Buscar por título..." value="{{ request.GET.q }}">
+        <button type="submit">Buscar</button>
+        <a href="{% url 'listar_livros' %}">Limpar busca</a>
+    </form>
+    
+    <table border="1">
+        <tr>
+            <th>Título</th>
+            <th>Ano</th>
+            <th>Preço</th>
+            <th>Estoque</th>
+            <th>Editora</th>
+            <th>Categoria</th>
+            <th>Opcoes</th>
+        </tr>
+        {% for livro in livros %}
+        <tr>
+            <td>{{ livro.titulo }}</td>
+            <td>{{ livro.ano_publicacao }}</td>
+            <td>{{ livro.preco }}</td>
+            <td>{{ livro.estoque }}</td>
+            <td>{{ livro.id_editora }}</td>
+            <td>{{ livro.id_categoria }}</td>
+            <td>
+                <a href="{% url 'editar_livros' livro.id_livro %}">Editar</a>
+                <a href="{% url 'deletar_livros' livro.id_livro %}">Excluir</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    
+    <a href="{% url 'adicionar_livros' %}">Adicionar Novo Livro</a>
+</body>
+</html>
