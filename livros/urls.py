@@ -21,4 +21,13 @@ urlpatterns = [
     
     # 🗑️ EXCLUSÃO: Confirmação e exclusão de livro (com ID)
     path('deletar/<int:id_livro>/', views.excluir_livro, name='deletar_livros'),
+
+    # lista de todas as editoras
+    path('lista_editora/', views.listar_editoras, name='listar_editoras'),
+
+    # criar nova editora
+    path('criar_editora/', views.criar_editora, name='adicionar_editoras'),
+
+
+
 ]

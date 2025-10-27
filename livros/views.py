@@ -220,3 +220,17 @@ def buscar_livros(request):
     
     # 🎯 RENDERIZAR MESMO TEMPLATA DA LISTA, MAS COM RESULTADOS FILTRADOS
     return render(request, 'livros/lista.html', {'livros': livros})
+
+
+# CRUD EDITORA
+
+def listar_editoras(request):
+    editoras = Editoras.objects.all()
+    return render(request, 'livros/lista_editoras.html', {'editoras': editoras})
+
+def criar_editora(request):
+    if request.method == 'POST':
+        nome = request.POST.get('nome_editora')
+        # outras validacoes
+    else:
+        return render(request, 'livros/formulario_editora.html')

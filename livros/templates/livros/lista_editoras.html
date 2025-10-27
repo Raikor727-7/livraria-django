@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista editoras</title>
+</head>
+<body>
+    <h1>EDITORAS</h1>
+    <table border="1">
+        <tr>
+            <th>id</th>
+            <th>nome</th>
+            <th>endereco</th>
+            <th>telefone</th>
+            <th>email</th>
+        </tr>
+        {% for editora in editoras %}
+        <tr>
+            <td>{{editora.id_editora}}</td>
+            <td>{{editora.nome_editora}}</td>
+            <td>{{editora.endereco}}</td>
+            <td>{{editora.telefone}}</td>
+            <td>{{editora.email}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <a href="{% url 'adicionar_editoras' %}">Adicionar Nova editora</a>
+</body>
+</html>
