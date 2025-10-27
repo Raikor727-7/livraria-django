@@ -309,7 +309,6 @@ def listar_categorias(request):
     categorias =  Categorias.objects.all()
     return render(request, 'livros/lista_categorias.html', {'categorias': categorias})
 
-
 def adicionar_categoria(request):
     if request.method == 'POST':
         nome = request.POST.get('nome_categoria')
@@ -337,5 +336,11 @@ def adicionar_categoria(request):
         return render(request, 'livros/forms_categoria.html')
 
 def excluir_categorias(request, id_categoria):
-    return 0
-
+    categoria = get_object_or_404(Categorias, id_categoria=id_categoria)
+    
+    if request.method == 'POST':
+        categoria.delete()
+        messages.success(request, 'categoria excluida com exito')
+        return redirect('listar_categorias')
+    else:
+        return render(request, 'livros/excluir_categoria.html', {'categoria': categoria})
