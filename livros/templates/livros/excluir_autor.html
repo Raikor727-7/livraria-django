@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Confirmação de Exclusão</title>
+</head>
+<body>
+    <h1>Confirmar Exclusão de autor</h1>
+    
+    <!-- 📋 EXIBIR DADOS DO autor PARA CONFIRMAÇÃO -->
+    <p><strong>Nome:</strong> {{ autor.nome_autor }}</p>
+    <p><strong>Nascimento:</strong> {{ autor.data_nascimento }}</p>
+    
+    <!-- ❓ MENSAGEM DE CONFIRMAÇÃO -->
+    <p>Tem certeza que deseja excluir esta categoria?</p>
+    
+    <!-- ✅ FORMULÁRIO PARA CONFIRMAR EXCLUSÃO -->
+    <form action="" method="post">
+        {% csrf_token %}
+        <button type="submit" style="background-color: red; color: white;">CONFIRMAR EXCLUSÃO</button>
+    </form>
+    
+    <!-- ↩️ BOTÃO PARA CANCELAR (voltar para lista) -->
+    <a href="{% url 'listar_autores' %}">Cancelar</a>
+</body>
+</html>

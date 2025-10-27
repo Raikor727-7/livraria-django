@@ -1,6 +1,6 @@
 import time
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Livros, Editoras, Categorias
+from .models import Livros, Editoras, Categorias, Autores
 from django.contrib import messages
 
 # Create your views here.
@@ -344,3 +344,79 @@ def excluir_categorias(request, id_categoria):
         return redirect('listar_categorias')
     else:
         return render(request, 'livros/excluir_categoria.html', {'categoria': categoria})
+
+# CRUD AUTORES
+
+def listar_autores(request):
+    autores = Autores.objects.all()
+    return render(request, 'livros/lista_autores.html', {'autores': autores})
+
+def adicionar_autor(request):
+    if request.method == 'POST':
+        nome = request.POST.get('nome_autor')
+        nacionalidade = request.POST.get('nacionalidade')
+        data = request.POST.get('data_nascimento')
+        biografia = request.POST.get('biografia')
+
+        if not nome:
+            messages.error(request, 'Nome nao pode ser nulo')
+            return render(request, 'livros/forms_autor.html')
+        
+        if Autores.objects.filter(nome_autor=nome):
+            messages.error(request, 'nome existe')
+            return render(request, 'livros/forms_autor.html')
+        
+        autor = Autores.objects.create(
+            nome_autor = nome,
+            nacionalidade = nacionalidade or None,
+            data_nascimento = data or None,
+            biografia = biografia or None,
+        )
+
+        
+        messages.success(request, 'autor criado com exito')
+        return redirect('listar_autores')
+    else:
+        return render(request, 'livros/forms_autor.html')
+
+def editar_autor(request, id_autor):
+    autor = get_object_or_404(Autores, id_autor=id_autor)
+
+    if request.method == 'POST':
+        nome = request.POST.get('nome_autor')
+        nacionalidade = request.POST.get('nacionalidade')
+        data = request.POST.get('data_nascimento')
+        biografia = request.POST.get('biografia')
+
+        if not nome:
+            messages.error(request, 'Nome nao pode ser nulo')
+            return render(request, 'livros/forms_autor.html')
+        
+        if Autores.objects.filter(nome_autor=nome):
+            messages.error(request, 'nome existe')
+            return render(request, 'livros/forms_autor.html')
+        
+        autor.nome_autor = nome
+        autor.nacionalidade = nacionalidade
+        autor.data_nascimento = data
+        autor.biografia = biografia
+
+        autor.save()
+
+        messages.success(request, 'autor salvo com sucesso')
+        return redirect('listar_autores')
+    
+    else:
+        return render(request, 'livros/editar_autor.html', {'autor': autor})
+
+
+def excluir_autor(request, id_autor):
+    autor = get_object_or_404(Autores, id_autor=id_autor)
+
+    if request.method == 'POST':
+        autor.delete()
+        autor.delete()
+        messages.success(request, 'autor excluida com exito')
+        return redirect('listar_autores')
+    else:
+        return render(request, 'livros/excluir_autor.html', {'autor': autor})

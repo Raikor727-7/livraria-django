@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista autores</title>
+</head>
+<body>
+    <h1>CATEGORIAS</h1>
+    <table border="1">
+        <tr>
+            <th>id</th>
+            <th>nome</th>
+            <th>nacionalidade</th>
+            <th>nascimento</th>
+            <th>biografia</th>
+            <th>opcoes</th>
+        </tr>
+        {% for autor in autores %}
+        <tr>
+            <td>{{autor.id_autor}}</td>
+            <td>{{autor.nome_autor}}</td>
+            <td>{{autor.nacionalidade}}</td>
+            <td>{{autor.data_nascimento}}</td>
+            <td>{{autor.biografia}}</td>
+            <td>
+                <a href="{% url 'editar_autor' autor.id_autor %}">Editar</a>
+                <a href="{% url 'excluir_autor' autor.id_autor %}">Excluir</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    <a href="{% url 'adicionar_autor' %}">Adicionar Novo autor</a>
+    <a href="{% url 'listar_livros' %}">Lista de livros</a>
+</body>
+</html>

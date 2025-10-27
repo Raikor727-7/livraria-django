@@ -39,4 +39,13 @@ urlpatterns = [
 
     path('excluir_categoria/<int:id_categoria>/', views.excluir_categorias, name='excluir_categoria'),
 
+    #lista autores
+    path('lista_autores/', views.listar_autores, name='listar_autores'),
+
+    path('adicionar_autor', views.adicionar_autor, name='adicionar_autor'),
+
+    path('editar_autor/<int:id_autor>/', views.editar_autor, name='editar_autor'),
+
+    path('excluir_autor/<int:id_autor>/', views.excluir_autor, name='excluir_autor'),
+
 ]
