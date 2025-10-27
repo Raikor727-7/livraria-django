@@ -263,3 +263,42 @@ def criar_editora(request):
     
     else:
         return render(request, 'livros/formulario_editora.html')
+    
+def editar_editoras(request, id_editora):
+    editora = get_object_or_404(Editoras, id_editora=id_editora)
+
+    if request.method == 'GET':
+        return render(request, 'livros/forms_editar_editora.html',
+                      {'editora': editora})
+    
+    else:
+        nome = request.POST.get('nome_editora')
+        endereco = request.POST.get('endereco')
+        telefone = request.POST.get('telefone')
+        email = request.POST.get('email')
+
+        # ✅ VALIDAÇÃO: Nome é obrigatório
+        if not nome:
+            messages.error(request, 'Nome da editora não pode estar vazio!')
+            return render(request, 'livros/formulario_editora.html')
+
+        # ✅ VALIDAÇÃO: Verificar se nome já existe
+        if Editoras.objects.filter(nome_editora=nome).exists():
+            messages.error(request, 'Já existe uma editora com este nome!')
+            return render(request, 'livros/formulario_editora.html')
+
+        editora.nome_editora = nome
+        editora.endereco = endereco
+        editora.telefone = telefone
+        editora.email = email
+
+        editora.save()
+        messages.success(request, 'editora salva com sucesso')
+        return redirect('listar_editoras')
+
+def excluir_editora(request, id_editora):
+    return 0
+
+
+
+

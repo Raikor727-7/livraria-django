@@ -26,8 +26,10 @@ urlpatterns = [
     path('lista_editora/', views.listar_editoras, name='listar_editoras'),
 
     # criar nova editora
-    path('criar_editora/', views.criar_editora, name='adicionar_editoras'),
+    path('criar_editora/', views.criar_editora, name='adicionar_editora'),
 
+    path('editar_editora/<int:id_editora>/', views.editar_editoras, name='editar_editora'),
 
+    path('excluir_editora/<int:id_editora>/', views.excluir_editora, name='excluir_editora')
 
 ]
