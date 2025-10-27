@@ -1,10 +1,10 @@
-📚 DOCUMENTAÇÃO COMPLETA - SISTEMA LIVRARIA DJANGO
-🎯 VISÃO GERAL DO PROJETO
+# 📚 DOCUMENTAÇÃO COMPLETA - SISTEMA LIVRARIA DJANGO
+## 🎯 VISÃO GERAL DO PROJETO
 Sistema de gerenciamento de livraria desenvolvido em Django com funcionalidades completas de CRUD (Create, Read, Update, Delete) para livros, incluindo relacionamentos com editoras e categorias.
 
-🏗️ ARQUITETURA DO PROJETO
+## 🏗️ ARQUITETURA DO PROJETO
 Estrutura de Diretórios
-text
+```
 livraria-django/
 ├── livraria/                 # Configurações do projeto
 │   ├── settings.py
@@ -24,7 +24,11 @@ livraria-django/
 ├── data/
 │   └── livraria.db          # Banco de dados SQLite
 └── manage.py
-📊 MODELOS DE DADOS
+
+```
+
+## 📊 MODELOS DE DADOS  
+
 Livros (Modelo Principal)
 id_livro - Chave primária automática
 
