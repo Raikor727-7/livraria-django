@@ -231,6 +231,35 @@ def listar_editoras(request):
 def criar_editora(request):
     if request.method == 'POST':
         nome = request.POST.get('nome_editora')
+        endereco = request.POST.get('endereco')
+        telefone = request.POST.get('telefone')
+        email = request.POST.get('email')
+
+        # ✅ VALIDAÇÃO: Nome é obrigatório
+        if not nome:
+            messages.error(request, 'Nome da editora não pode estar vazio!')
+            return render(request, 'livros/formulario_editora.html')
+
+        # ✅ VALIDAÇÃO: Verificar se nome já existe
+        if Editoras.objects.filter(nome_editora=nome).exists():
+            messages.error(request, 'Já existe uma editora com este nome!')
+            return render(request, 'livros/formulario_editora.html')
+
         # outras validacoes
+
+        try:
+            editora = Editoras.objects.create(
+                nome_editora=nome,
+                endereco=endereco or None,  # Converte string vazia para None
+                telefone=telefone or None,
+                email=email or None,
+            )
+            messages.success(request, 'Editora criada com sucesso!')
+            return redirect('listar_editoras')  # ✅ CORRIGIDO: redirecionar para lista
+        
+        except Exception as e:
+            messages.error(request, f'Erro ao criar editora: {str(e)}')
+            return render(request, 'livros/formulario_editora.html')
+    
     else:
         return render(request, 'livros/formulario_editora.html')
