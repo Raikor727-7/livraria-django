@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista categoria</title>
+</head>
+<body>
+    <h1>CATEGORIAS</h1>
+    <table border="1">
+        <tr>
+            <th>id</th>
+            <th>nome</th>
+            <th>descricao</th>
+            <th>opcoes</th>
+        </tr>
+        {% for categoria in categorias %}
+        <tr>
+            <td>{{categoria.id_categoria}}</td>
+            <td>{{categoria.nome_categoria}}</td>
+            <td>{{categoria.descricao}}</td>
+            <td>
+                <a href="{% url 'excluir_categoria' categoria.id_categoria %}">Excluir</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    <a href="{% url 'adicionar_categorias' %}">Adicionar Nova categoria</a>
+    <a href="{% url 'listar_livros' %}">Lista de livros</a>
+</body>
+</html>

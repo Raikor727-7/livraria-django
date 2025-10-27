@@ -303,5 +303,16 @@ def excluir_editora(request, id_editora):
         return render(request, 'livros/excluir_editora.html', {'editora': editora})
 
 
+# CRUD CATEGORIAS
 
+def listar_categorias(request):
+    categorias =  Categorias.objects.all()
+    return render(request, 'livros/lista_categorias.html', {'categorias': categorias})
+
+
+def adicionar_categoria(request):
+    return 0
+
+def excluir_categorias(request, id_categoria):
+    return 0
 
