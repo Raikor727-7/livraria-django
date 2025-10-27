@@ -6,21 +6,22 @@
 <body>
     <h1>Confirmar Exclusão de Livro</h1>
     
-    <!-- ❌ <h3> não tem atributo value -->
-    <!-- ✅ Mostrar os dados do livro -->
+    <!-- 📋 EXIBIR DADOS DO LIVRO PARA CONFIRMAÇÃO -->
     <p><strong>Título:</strong> {{ livro.titulo }}</p>
     <p><strong>Ano:</strong> {{ livro.ano_publicacao }}</p>
     <p><strong>Preço:</strong> {{ livro.preco }}</p>
     <p><strong>Estoque:</strong> {{ livro.estoque }}</p>
     
+    <!-- ❓ MENSAGEM DE CONFIRMAÇÃO -->
     <p>Tem certeza que deseja excluir este livro?</p>
     
+    <!-- ✅ FORMULÁRIO PARA CONFIRMAR EXCLUSÃO -->
     <form action="" method="post">
         {% csrf_token %}
         <button type="submit" style="background-color: red; color: white;">CONFIRMAR EXCLUSÃO</button>
     </form>
     
-    <!-- ✅ Botão para cancelar -->
+    <!-- ↩️ BOTÃO PARA CANCELAR (voltar para lista) -->
     <a href="{% url 'listar_livros' %}">Cancelar</a>
 </body>
 </html>

@@ -5,6 +5,8 @@
 </head>
 <body>
     <h1>Forms de adicao de livro</h1>
+    
+    <!-- 🎭 MENSAGENS DE ERRO (validações) -->
     {% if messages %}
     <div class="messages">
         {% for message in messages %}
@@ -12,29 +14,36 @@
         {% endfor %}
     </div>
     {% endif %}
+    
+    <!-- 📝 FORMULÁRIO DE CRIAÇÃO -->
     <form action="" method="post">
-        {% csrf_token %}
+        {% csrf_token %}  <!-- 🔒 PROTEÇÃO CONTRA CSRF (obrigatório no Django) -->
+        
+        <!-- ✏️ CAMPOS BÁSICOS DO LIVRO -->
         <input type="text" name="titulo" placeholder="Título" required>
         <input type="number" name="ano_publicacao" placeholder="Ano Publicação">
         <input type="text" name="preco" placeholder="Preço">
         <input type="number" name="estoque" placeholder="Estoque">
         
-        <!-- ✅ SELECT PARA EDITORA -->
+        <!-- 🏢 SELECT PARA EDITORA -->
         <select name="id_editora">
             <option value="">Selecione uma editora</option>
+            <!-- 🎯 LOOP: Para cada editora na lista passada pela view -->
             {% for editora in editoras %}
             <option value="{{ editora.id_editora }}">{{ editora.nome_editora }}</option>
             {% endfor %}
         </select>
         
-        <!-- ✅ SELECT PARA CATEGORIA -->
+        <!-- 📚 SELECT PARA CATEGORIA -->
         <select name="id_categoria">
             <option value="">Selecione uma categoria</option>
+            <!-- 🎯 LOOP: Para cada categoria na lista passada pela view -->
             {% for categoria in categorias %}
             <option value="{{ categoria.id_categoria }}">{{ categoria.nome_categoria }}</option>
             {% endfor %}
         </select>
         
+        <!-- 💾 BOTÃO PARA SALVAR -->
         <button type="submit">Salvar</button>
     </form>
 </body>

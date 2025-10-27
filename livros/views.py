@@ -2,105 +2,128 @@ import time
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Livros, Editoras, Categorias
 from django.contrib import messages
+
 # Create your views here.
 
-# 1. listar_livros - para mostrar todos os livros
 def listar_livros(request):
-    # 1. Buscar todos os livros do banco
+    """
+    VIEW: Listar todos os livros
+    URL: /livros/lista/
+    Função: Exibe todos os livros em uma tabela
+    """
+    # 1. Buscar TODOS os livros do banco de dados
     livros = Livros.objects.all()
-    # 3. Renderizar o template com a lista 2. Passar os livros para o template
+    
+    # 2. Renderizar o template passando a lista de livros
     return render(request, 'livros/lista.html', {'livros': livros})
 
-# 2. criar_livro - formulário para criar novo livro  
-def criar_livro(request):
 
+def criar_livro(request):
+    """
+    VIEW: Criar novo livro
+    URL: /livros/criar/
+    Métodos: GET (mostrar formulário), POST (processar dados)
+    """
     if request.method == 'POST':
+        # 📥 CAPTURAR DADOS DO FORMULÁRIO
         titulo = request.POST.get('titulo')
         ano = request.POST.get('ano_publicacao')
         preco = request.POST.get('preco')
         estoque = request.POST.get('estoque')
-        id_editora = request.POST.get('id_editora')  # ✅ CAPTURAR
-        id_categoria = request.POST.get('id_categoria') 
+        id_editora = request.POST.get('id_editora')  # ID da editora selecionada
+        id_categoria = request.POST.get('id_categoria')  # ID da categoria selecionada
         
-        # VALIDAÇÃO TÍTULO
+        # ✅ VALIDAÇÃO: Título é obrigatório
         if not titulo:
             messages.error(request, 'Título não pode estar vazio!')
             return render(request, 'livros/formulario.html')
         
-        # VALIDAÇÃO ANO
-        if ano:  # se preencheu ano
+        # ✅ VALIDAÇÃO: Ano (se preenchido)
+        if ano:  # Se o usuário preencheu o ano
             try:
-                ano = int(ano)
-                if ano > time.localtime().tm_year:  # ano não pode ser futuro
+                ano = int(ano)  # Converter para número
+                # Verificar se ano não é futuro
+                if ano > time.localtime().tm_year:
                     messages.error(request, 'Ano não pode ser no futuro!')
                     return render(request, 'livros/formulario.html')
-            except ValueError:
+            except ValueError:  # Se não for número válido
                 messages.error(request, 'Ano deve ser um número!')
                 return render(request, 'livros/formulario.html')
 
-        # VALIDAÇÃO PREÇO
-        if preco:  # se preencheu preço
+        # ✅ VALIDAÇÃO: Preço (se preenchido)
+        if preco:
             try:
-                preco = float(preco)
-                if preco < 0:
+                preco = float(preco)  # Converter para decimal
+                if preco < 0:  # Não pode ser negativo
                     messages.error(request, 'Preço não pode ser negativo!')
                     return render(request, 'livros/formulario.html')
             except ValueError:
                 messages.error(request, 'Preço deve ser um número!')
                 return render(request, 'livros/formulario.html')
         
-        # VALIDAÇÃO ESTOQUE
-        if estoque:  # se preencheu estoque
+        # ✅ VALIDAÇÃO: Estoque (se preenchido)
+        if estoque:
             try:
-                estoque = int(estoque)
-                if estoque < 0:
+                estoque = int(estoque)  # Converter para inteiro
+                if estoque < 0:  # Não pode ser negativo
                     messages.error(request, 'Estoque não pode ser negativo!')
                     return render(request, 'livros/formulario.html')
             except ValueError:
                 messages.error(request, 'Estoque deve ser um número!')
                 return render(request, 'livros/formulario.html')
 
-        # ✅ SÓ AQUI CRIA O LIVRO
+        # 🎉 CRIAR O LIVRO NO BANCO DE DADOS
         livro = Livros.objects.create(
             titulo=titulo,
-            ano_publicacao=ano,
-            preco=preco,
-            estoque=estoque,
+            ano_publicacao=ano,  # Pode ser None se vazio
+            preco=preco,         # Pode ser None se vazio
+            estoque=estoque,     # Pode ser None se vazio
         )
         
+        # 🔗 CONFIGURAR RELACIONAMENTOS (se selecionados)
         if id_editora:
+            # Buscar objeto Editora pelo ID e associar ao livro
             livro.id_editora = Editoras.objects.get(id_editora=id_editora)
         if id_categoria:
+            # Buscar objeto Categoria pelo ID e associar ao livro
             livro.id_categoria = Categorias.objects.get(id_categoria=id_categoria)
 
-        livro.save()
+        livro.save()  # Salvar as alterações (relacionamentos)
         messages.success(request, 'Livro criado com sucesso!')
-        return redirect('listar_livros')
+        return redirect('listar_livros')  # Redirecionar para lista
         
     else:
+        # 📤 MÉTODO GET: Mostrar formulário vazio
+        # Buscar todas editoras e categorias para preencher os selects
         editoras = Editoras.objects.all()
         categorias = Categorias.objects.all()
         return render(request, 'livros/formulario.html', {
             'editoras': editoras,
             'categorias': categorias
         })
-        # ⚠️ O que colocar aqui para mostrar o formulário?
-    
-# 3. editar_livro - formulário para editar livro existente
+
+
 def editar_livro(request, id_livro):
+    """
+    VIEW: Editar livro existente
+    URL: /livros/editar/<id_livro>/
+    Parâmetro: id_livro - ID do livro a ser editado
+    """
+    # 🔍 BUSCAR LIVRO PELO ID (ou retornar 404 se não existir)
     livro = get_object_or_404(Livros, id_livro=id_livro)
     
     if request.method == 'GET':
-        # ✅ PASSAR EDITORAS E CATEGORIAS PARA O TEMPLATE
+        # 📤 MÉTODO GET: Mostrar formulário com dados atuais
         editoras = Editoras.objects.all()
         categorias = Categorias.objects.all()
         return render(request, 'livros/formulario_editar.html', {
-            'livro': livro,
-            'editoras': editoras,
-            'categorias': categorias
+            'livro': livro,           # Livro a ser editado
+            'editoras': editoras,     # Todas editoras para select
+            'categorias': categorias  # Todas categorias para select
         })
     else:
-         # ✅ CAPTURAR TODOS OS CAMPOS
+        # 📥 MÉTODO POST: Processar atualização
+        # Capturar todos os campos do formulário
         titulo = request.POST.get('titulo')
         ano = request.POST.get('ano_publicacao')
         preco = request.POST.get('preco')
@@ -108,24 +131,22 @@ def editar_livro(request, id_livro):
         id_editora = request.POST.get('id_editora')
         id_categoria = request.POST.get('id_categoria')
 
-        # VALIDAÇÃO TÍTULO
+        # ✅ VALIDAÇÕES (mesmas da criação)
         if not titulo:
             messages.error(request, 'Título não pode estar vazio!')
             return render(request, 'livros/formulario.html')
         
-        # VALIDAÇÃO ANO
-        if ano:  # se preencheu ano
+        if ano:
             try:
                 ano = int(ano)
-                if ano > time.localtime().tm_year:  # ano não pode ser futuro
+                if ano > time.localtime().tm_year:
                     messages.error(request, 'Ano não pode ser no futuro!')
                     return render(request, 'livros/formulario.html')
             except ValueError:
                 messages.error(request, 'Ano deve ser um número!')
                 return render(request, 'livros/formulario.html')
 
-        # VALIDAÇÃO PREÇO
-        if preco:  # se preencheu preço
+        if preco:
             try:
                 preco = float(preco)
                 if preco < 0:
@@ -135,8 +156,7 @@ def editar_livro(request, id_livro):
                 messages.error(request, 'Preço deve ser um número!')
                 return render(request, 'livros/formulario.html')
         
-        # VALIDAÇÃO ESTOQUE
-        if estoque:  # se preencheu estoque
+        if estoque:
             try:
                 estoque = int(estoque)
                 if estoque < 0:
@@ -146,41 +166,57 @@ def editar_livro(request, id_livro):
                 messages.error(request, 'Estoque deve ser um número!')
                 return render(request, 'livros/formulario.html')
 
-
-        # ✅ ATUALIZAR TODOS OS CAMPOS
-        livro.titulo = titulo  # ✅ FALTAVA ISSO!
+        # ✏️ ATUALIZAR TODOS OS CAMPOS DO LIVRO
+        livro.titulo = titulo
         livro.ano_publicacao = ano
         livro.preco = preco
         livro.estoque = estoque
         
+        # 🔗 ATUALIZAR RELACIONAMENTOS
         if id_editora:
             livro.id_editora = Editoras.objects.get(id_editora=id_editora)
         else:
-            livro.id_editora = None
+            livro.id_editora = None  # Remover editora se selecionado "vazio"
             
         if id_categoria:
             livro.id_categoria = Categorias.objects.get(id_categoria=id_categoria)
         else:
-            livro.id_categoria = None
+            livro.id_categoria = None  # Remover categoria se selecionado "vazio"
             
-        livro.save()
+        livro.save()  # Salvar todas as alterações no banco
         messages.success(request, 'Livro atualizado com sucesso!')
         return redirect('listar_livros')
-    # 4. Como redirecionar para a lista?
 
-#  4. excluir_livro - confirmar e excluir livro
+
 def excluir_livro(request, id_livro):
+    """
+    VIEW: Excluir livro com confirmação
+    URL: /livros/deletar/<id_livro>/
+    """
+    # 🔍 BUSCAR LIVRO PELO ID
     livro = get_object_or_404(Livros, id_livro=id_livro)
+    
     if request.method == 'POST':
+        # ✅ CONFIRMAÇÃO: Excluir livro permanentemente
         livro.delete()
         messages.success(request, 'Livro excluído com sucesso!')
         return redirect('listar_livros')
     else:
-         return render(request, 'livros/confirmar_exclusao.html', {'livro': livro})
+        # ❓ MÉTODO GET: Mostrar página de confirmação
+        return render(request, 'livros/confirmar_exclusao.html', {'livro': livro})
     
+
 def buscar_livros(request):
+    """
+    VIEW: Buscar livros por título
+    URL: /livros/buscar/
+    Parâmetro GET: 'q' - termo de busca
+    """
+    # 🔍 CAPTURAR TERMO DE BUSCA (ou string vazia se não existir)
     termo_busca = request.GET.get('q', '')
-    # Como filtrar livros pelo título?
+    
+    # 📚 FILTRAR LIVROS: título contém o termo (case-insensitive)
     livros = Livros.objects.filter(titulo__icontains=termo_busca)
-    # livros = Livros.objects.filter(???)
+    
+    # 🎯 RENDERIZAR MESMO TEMPLATA DA LISTA, MAS COM RESULTADOS FILTRADOS
     return render(request, 'livros/lista.html', {'livros': livros})
