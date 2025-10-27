@@ -29,7 +29,7 @@ livraria-django/
 
 ## 📊 MODELOS DE DADOS  
 
-Livros (Modelo Principal)
+### Livros (Modelo Principal)
 id_livro - Chave primária automática
 
 titulo - Título do livro (obrigatório)
@@ -44,7 +44,7 @@ id_editora - Relacionamento com Editoras (ForeignKey)
 
 id_categoria - Relacionamento com Categorias (ForeignKey)
 
-Outros Modelos
+### Outros Modelos
 Autores - Informações dos autores
 
 Editoras - Dados das editoras
@@ -57,8 +57,8 @@ Vendas - Registro de vendas
 
 LivrosAutores - Relação muitos-para-muitos entre livros e autores
 
-🔄 FLUXO DO CRUD COMPLETO
-1. CREATE (Criar Livro)
+## 🔄 FLUXO DO CRUD COMPLETO
+### 1. CREATE (Criar Livro)
 URL: /livros/criar/
 
 GET: Exibe formulário com selects para editora e categoria
@@ -67,60 +67,60 @@ POST: Valida dados e cria novo livro no banco
 
 Validações: Título obrigatório, ano não pode ser futuro, preço/estoque não negativos
 
-2. READ (Listar/Buscar Livros)
+### 2. READ (Listar/Buscar Livros)
 URLs:
 
 /livros/lista/ - Lista todos os livros
 
 /livros/buscar/ - Busca livros por título (case-insensitive)
 
-3. UPDATE (Editar Livro)
+### 3. UPDATE (Editar Livro)
 URL: /livros/editar/<id_livro>/
 
 GET: Formulário preenchido com dados atuais
 
 POST: Atualiza livro com novas informações
 
-4. DELETE (Excluir Livro)
+### 4. DELETE (Excluir Livro)
 URL: /livros/deletar/<id_livro>/
 
 GET: Página de confirmação com dados do livro
 
 POST: Exclui permanentemente o livro
 
-🎨 INTERFACES (TEMPLATES)
+## 🎨 INTERFACES (TEMPLATES)
 lista.html
-Tabela com todos os livros
+- Tabela com todos os livros
 
-Formulário de busca
+- Formulário de busca
 
-Links para editar/excluir cada livro
+- Links para editar/excluir cada livro
 
-Botão "Adicionar Novo Livro"
+- Botão "Adicionar Novo Livro"
 
-Sistema de mensagens (sucesso/erro)
+- Sistema de mensagens (sucesso/erro)
 
 formulario.html (Criação)
-Campos: título, ano, preço, estoque
+- Campos: título, ano, preço, estoque
 
-Selects para editora e categoria
+- Selects para editora e categoria
 
-Validação HTML5 (required)
+- Validação HTML5 (required)
 
 formulario_editar.html (Edição)
-Similar ao de criação, mas com valores preenchidos
+- Similar ao de criação, mas com valores preenchidos
 
-Selects com opção selecionada atual
+- Selects com opção selecionada atual
 
 confirmar_exclusao.html
-Exibe dados do livro para confirmação
+- Exibe dados do livro para confirmação
 
-Botão de confirmação (vermelho) e cancelar
+- Botão de confirmação (vermelho) e cancelar
 
-⚙️ CONFIGURAÇÕES TÉCNICAS
+## ⚙️ CONFIGURAÇÕES TÉCNICAS
 Settings Principais
-python
-# Database
+### Database
+```
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -156,7 +156,10 @@ urlpatterns = [
     path('buscar/', views.buscar_livros, name='buscar_livros'),
     path('deletar/<int:id_livro>/', views.excluir_livro, name='deletar_livros'),
 ]
-🔧 FUNCIONALIDADES IMPLEMENTADAS
+
+```
+
+## 🔧 FUNCIONALIDADES IMPLEMENTADAS
 Validações de Dados
 Título: Campo obrigatório
 
@@ -187,7 +190,7 @@ Mensagens de erro (validações)
 
 Confirmação antes de excluir
 
-🚀 COMO USAR O SISTEMA
+## 🚀 COMO USAR O SISTEMA
 1. Acessar o Sistema
 text
 python manage.py runserver
