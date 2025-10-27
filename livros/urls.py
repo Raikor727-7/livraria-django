@@ -18,6 +18,9 @@ urlpatterns = [
     
     # 🔍 BUSCA: Busca livros por título
     path('buscar/', views.buscar_livros, name='buscar_livros'),
+
+    # No urls.py, adicione:
+    path('buscar_avancada/', views.buscar_livros_avancada, name='buscar_avancada'),
     
     # 🗑️ EXCLUSÃO: Confirmação e exclusão de livro (com ID)
     path('deletar/<int:id_livro>/', views.excluir_livro, name='deletar_livros'),

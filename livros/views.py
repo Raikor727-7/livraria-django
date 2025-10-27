@@ -17,7 +17,6 @@ def listar_livros(request):
     # 2. Renderizar o template passando a lista de livros
     return render(request, 'livros/lista.html', {'livros': livros})
 
-
 def criar_livro(request):
     """
     VIEW: Criar novo livro
@@ -101,7 +100,6 @@ def criar_livro(request):
             'editoras': editoras,
             'categorias': categorias
         })
-
 
 def editar_livro(request, id_livro):
     """
@@ -187,7 +185,6 @@ def editar_livro(request, id_livro):
         messages.success(request, 'Livro atualizado com sucesso!')
         return redirect('listar_livros')
 
-
 def excluir_livro(request, id_livro):
     """
     VIEW: Excluir livro com confirmação
@@ -205,7 +202,6 @@ def excluir_livro(request, id_livro):
         # ❓ MÉTODO GET: Mostrar página de confirmação
         return render(request, 'livros/confirmar_exclusao.html', {'livro': livro})
     
-
 def buscar_livros(request):
     """
     VIEW: Buscar livros por título
@@ -221,6 +217,89 @@ def buscar_livros(request):
     # 🎯 RENDERIZAR MESMO TEMPLATA DA LISTA, MAS COM RESULTADOS FILTRADOS
     return render(request, 'livros/lista.html', {'livros': livros})
 
+def buscar_livros_avancada(request):
+    """
+    VIEW: Busca avançada com múltiplos filtros
+    URL: /livros/buscar_avancada/
+    """
+    # Capturar todos os parâmetros de busca
+    termo_busca = request.GET.get('q', '')  # Título
+    autor_nome = request.GET.get('autor', '')
+    editora_nome = request.GET.get('editora', '')
+    categoria_nome = request.GET.get('categoria', '')
+    ano_min = request.GET.get('ano_min', '')
+    ano_max = request.GET.get('ano_max', '')
+    preco_max = request.GET.get('preco_max', '')
+    
+    # Começar com todos os livros
+    livros = Livros.objects.all()
+    
+    # 🔍 APLICAR FILTROS CONDICIONALMENTE
+    
+    # Filtro por título (busca parcial)
+    if termo_busca:
+        livros = livros.filter(titulo__icontains=termo_busca)
+    
+    # Filtro por autor (via relação LivrosAutores)
+    if autor_nome:
+        livros = livros.filter(
+            livrosautores__id_autor__nome_autor__icontains=autor_nome
+        ).distinct()
+    
+    # Filtro por editora
+    if editora_nome:
+        livros = livros.filter(
+            id_editora__nome_editora__icontains=editora_nome
+        )
+    
+    # Filtro por categoria
+    if categoria_nome:
+        livros = livros.filter(
+            id_categoria__nome_categoria__icontains=categoria_nome
+        )
+    
+    # Filtro por ano mínimo (livros a partir de X ano)
+    if ano_min:
+        try:
+            livros = livros.filter(ano_publicacao__gte=int(ano_min))
+        except ValueError:
+            pass  # Ignora se não for número válido
+    
+    # Filtro por ano máximo (livros até X ano)
+    if ano_max:
+        try:
+            livros = livros.filter(ano_publicacao__lte=int(ano_max))
+        except ValueError:
+            pass
+    
+    # Filtro por preço máximo
+    if preco_max:
+        try:
+            livros = livros.filter(preco__lte=float(preco_max))
+        except (ValueError, TypeError):
+            pass
+    
+    # Buscar todas editoras e categorias para o formulário
+    editoras = Editoras.objects.all()
+    categorias = Categorias.objects.all()
+    autores = Autores.objects.all()
+    
+    context = {
+        'livros': livros,
+        'editoras': editoras,
+        'categorias': categorias,
+        'autores': autores,
+        # Manter valores nos campos após busca
+        'termo_busca': termo_busca,
+        'autor_selecionado': autor_nome,
+        'editora_selecionada': editora_nome,
+        'categoria_selecionada': categoria_nome,
+        'ano_min': ano_min,
+        'ano_max': ano_max,
+        'preco_max': preco_max,
+    }
+    
+    return render(request, 'livros/busca_avancada.html', context)
 
 # CRUD EDITORA
 

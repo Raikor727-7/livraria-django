@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Busca Avançada</title>
+    <style>
+        .filtros {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .filtro-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .btn-buscar {
+            background: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .btn-buscar:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 Busca Avançada de Livros</h1>
+    
+    <div class="filtros">
+        <form method="get" action="{% url 'buscar_avancada' %}">
+            <!-- Título -->
+            <div class="filtro-group">
+                <label for="q">Título do Livro:</label>
+                <input type="text" id="q" name="q" value="{{ termo_busca }}" 
+                       placeholder="Digite parte do título...">
+            </div>
+            
+            <!-- Autor -->
+            <div class="filtro-group">
+                <label for="autor">Autor:</label>
+                <input type="text" id="autor" name="autor" value="{{ autor_selecionado }}"
+                       placeholder="Nome do autor...">
+            </div>
+            
+            <!-- Editora -->
+            <div class="filtro-group">
+                <label for="editora">Editora:</label>
+                <select id="editora" name="editora">
+                    <option value="">Todas as editoras</option>
+                    {% for editora in editoras %}
+                    <option value="{{ editora.nome_editora }}" 
+                            {% if editora_selecionada == editora.nome_editora %}selected{% endif %}>
+                        {{ editora.nome_editora }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <!-- Categoria -->
+            <div class="filtro-group">
+                <label for="categoria">Categoria:</label>
+                <select id="categoria" name="categoria">
+                    <option value="">Todas as categorias</option>
+                    {% for categoria in categorias %}
+                    <option value="{{ categoria.nome_categoria }}"
+                            {% if categoria_selecionada == categoria.nome_categoria %}selected{% endif %}>
+                        {{ categoria.nome_categoria }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <!-- Ano de Publicação -->
+            <div class="filtro-group">
+                <label>Ano de Publicação:</label>
+                <div style="display: flex; gap: 10px;">
+                    <input type="number" name="ano_min" value="{{ ano_min }}" 
+                           placeholder="De..." min="1900" max="2030">
+                    <input type="number" name="ano_max" value="{{ ano_max }}" 
+                           placeholder="Até..." min="1900" max="2030">
+                </div>
+            </div>
+            
+            <!-- Preço Máximo -->
+            <div class="filtro-group">
+                <label for="preco_max">Preço Máximo:</label>
+                <input type="number" id="preco_max" name="preco_max" 
+                       value="{{ preco_max }}" placeholder="R$..." step="0.01" min="0">
+            </div>
+            
+            <button type="submit" class="btn-buscar">🔍 Aplicar Filtros</button>
+            <a href="{% url 'buscar_avancada' %}" style="margin-left: 10px;">Limpar Filtros</a>
+        </form>
+    </div>
+
+    <!-- Resultados -->
+    <h2>📚 Resultados ({{ livros.count }} livros encontrados)</h2>
+    
+    {% if livros %}
+    <table border="1" style="width: 100%;">
+        <tr>
+            <th>Título</th>
+            <th>Ano</th>
+            <th>Preço</th>
+            <th>Editora</th>
+            <th>Categoria</th>
+            <th>Autores</th>
+        </tr>
+        {% for livro in livros %}
+        <tr>
+            <td>{{ livro.titulo }}</td>
+            <td>{{ livro.ano_publicacao }}</td>
+            <td>R$ {{ livro.preco }}</td>
+            <td>{{ livro.id_editora }}</td>
+            <td>{{ livro.id_categoria }}</td>
+            <td>
+                {% for autor_livro in livro.livrosautores_set.all %}
+                    {{ autor_livro.id_autor.nome_autor }}{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+        <p>Nenhum livro encontrado com os filtros aplicados.</p>
+    {% endif %}
+    
+    <br>
+    <a href="{% url 'listar_livros' %}">← Voltar para lista completa</a>
+</body>
+</html>
